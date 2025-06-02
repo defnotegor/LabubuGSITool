@@ -1,13 +1,3 @@
-## Released GSIs
-Telegram channel: https://t.me/FoxetGSI
-
-## How to use
-
-### Download tools
-```
-git clone https://github.com/FoxetGSI/FoxetGSITool.git
-cd FoxetGSITool
-```
 
 ### For setting up requirements
 ```
