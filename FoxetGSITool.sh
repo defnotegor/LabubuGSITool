@@ -12,14 +12,14 @@ usage() {
   echo "  rom_type  - Type of rom"
   echo ""
   echo "Example:"
-  echo "  sudo bash $0 system Pixel"
+  echo "  ./$0 system Pixel"
   echo ""
 }
 
 supported_roms() {
     echo "Available ROMs:"
     echo ""
-    declare -a versions=(12 12.1 13 14 15)
+    declare -a versions=(11 12 12.1 13 14 15 16)
     for version in "${versions[@]}"; do
         rom_dir="ROMsPatches/$version"
         if [ -d "$rom_dir" ]; then
@@ -52,12 +52,16 @@ cp -r "$INPUT_DIR/." "$BASE_DIR/"
 
 SDK_VERSION=$(grep -m1 "ro.build.version.sdk" "$BASE_DIR/system/build.prop" | cut -d '=' -f2 | tr -dc '0-9')
 
+
 if [ -z "$SDK_VERSION" ] || ! [[ "$SDK_VERSION" =~ ^[0-9]+$ ]]; then
   echo "Error: Unable to determine SDK version from '$BASE_DIR/system/build.prop'."
   exit 1
 fi
 
 case "$SDK_VERSION" in
+  30)
+    android_version="11"
+    ;;
   31)
     android_version="12"
     ;;
@@ -72,6 +76,9 @@ case "$SDK_VERSION" in
     ;;
   35)
     android_version="15"
+    ;;
+   16)
+    android_version="16"
     ;;
   *)
     echo "Error: Unsupported SDK version $SDK_VERSION"
@@ -97,14 +104,12 @@ Patches/$android_version/make.sh "$BASE_DIR"
 Patches/common/make.sh "$BASE_DIR"
 ROMsPatches/$android_version/$ROM_TYPE/make.sh "$BASE_DIR"
 tar -xf "Patches/apex/$android_version.tar.xz" -C "$BASE_DIR/system/apex"
-
 if [ -n "$(ls -A "$BASE_DIR/vendor" 2>/dev/null)" ]; then
   Tools/vendoroverlay/addvo.sh "$BASE_DIR"
   rm -rf "$BASE_DIR/vendor/"*
 fi
 
 current_date=$(date +"%Y-%m-%d")
-
 echo "Create $ROM_TYPE-AB-$android_version-$current_date.img"
 mkdir -p "Output"
 rm -rf "Output/$ROM_TYPE-AB-$android_version-$current_date.img"
