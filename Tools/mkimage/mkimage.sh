@@ -17,7 +17,7 @@ systemdir=$1
 output=$2
 
 realsize=$(du -sb "$systemdir" | awk '{print $1}')
-additional_size=$((170 * 1024 * 1024))
+additional_size=$((250 * 1024 * 1024))
 syssize=$((realsize + additional_size))
 
 echo "Size: ${syssize} bytes (~$(echo "scale=2; ${syssize}/1024/1024/1024" | bc) GB)"
