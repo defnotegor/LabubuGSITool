@@ -97,19 +97,9 @@ rm -rf $BASE_DIR/system/etc/init/otapreopt.rc
 mv $system_ext/apex/* $BASE_DIR/system/apex
 rm -rf $system_ext/apex
 
-find "$product/app" -type d -name "oat" -exec rm -rf {} + 2>/dev/null
-find "$product/app" -type f -name "*.prof" -exec rm -f {} + 2>/dev/null
-find "$product/priv-app" -type d -name "oat" -exec rm -rf {} + 2>/dev/null
-find "$product/priv-app" -type f -name "*.prof" -exec rm -f {} + 2>/dev/null
-
-find "$system_ext/app" -type d -name "oat" -exec rm -rf {} + 2>/dev/null
-find "$system_ext/app" -type f -name "*.prof" -exec rm -f {} + 2>/dev/null
-find "$system_ext/priv-app" -type d -name "oat" -exec rm -rf {} + 2>/dev/null
-find "$system_ext/priv-app" -type f -name "*.prof" -exec rm -f {} + 2>/dev/null
-
-find "$BASE_DIR/system/app" -type d -name "oat" -exec rm -rf {} + 2>/dev/null
-find "$BASE_DIR/system/app" -type f -name "*.prof" -exec rm -f {} + 2>/dev/null
-find "$BASE_DIR/system/priv-app" -type d -name "oat" -exec rm -rf {} + 2>/dev/null
-find "$BASE_DIR/system/priv-app" -type f -name "*.prof" -exec rm -f {} + 2>/dev/null
+find "$BASE_DIR" -type d \( -name "app" -o -name "priv-app" \) | while read -r dir; do
+    find "$dir" -type d -name "oat" -exec rm -rf {} + 2>/dev/null
+    find "$dir" -type f -name "*.prof" -exec rm -f {} + 2>/dev/null
+done
 
 find "$BASE_DIR" -type f -name "fstab.*" -exec rm -f {} + 2>/dev/null
