@@ -1,26 +1,20 @@
 #!/bin/bash
 
-ROM_LINK=$1
+ROM_INPUT=$1
 ROM_TYPE=$2
-partitions="vendor system system_ext product optics prism mi_ext my_bigball my_engineering my_manifest my_region my_carrier my_heytap my_product my_stock system_ext_a system_ext_b system_a system_b product_a product_b odm_a odm_b"
+partitions="vendor system system_ext product mi_ext"
 
-if [[ -d "Tools/Firmware_extractor" ]]; then
-    git -C "Tools"/Firmware_extractor fetch origin
-    git -C "Tools"/Firmware_extractor reset --hard origin/master
-else
-    echo "Cloning Firmware_extractor..."
-    git clone -q --recurse-submodules https://github.com/AndroidDumps/Firmware_extractor.git  "Tools"/Firmware_extractor
-fi
 
 usage() {
-  echo "Usage: $0 [rom_link] [rom_type]"
+  echo "Usage: $0 [rom_input] [rom_type]"
   echo ""
   echo "Parameters:"
-  echo "  rom_link  - Link to the base ROM"
+  echo "  rom_input - URL or local path to the base ROM"
   echo "  rom_type  - Type of rom"
   echo ""
-  echo "Example:"
-  echo "  sudo bash $0 https://dl.google.com/dl/android/aosp/redfin-tq3a.230901.001.c2-factory-ca20bd02.zip  Pixel"
+  echo "Examples:"
+  echo "  sudo bash $0 https://dl.google.com/dl/android/aosp/redfin-tq3a.230901.001.c2-factory-ca20bd02.zip Pixel"
+  echo "  sudo bash $0 /path/to/local/rom.zip Pixel"
   echo ""
 }
 
@@ -42,8 +36,10 @@ supported_roms() {
     done
 }
 
+# Check argument
 if [ -z "$2" ]; then
   usage
+  supported_roms
   exit 0
 fi
 
@@ -52,10 +48,28 @@ rm -rf UnpackedROMs
 
 mkdir -p DownloadedROMs
 mkdir -p UnpackedROMs
+sudo chmod -R 777 /home/egor/tool
+mkdir 
+# Check if input is a URL or local file
+if [[ "$ROM_INPUT" == http* ]]; then
+    echo "Downloading ROM from URL..."
+    wget -P "DownloadedROMs/" "$ROM_INPUT"
+    ROM_PATH="DownloadedROMs/"$(basename "$ROM_INPUT")
+elif [[ -f "$ROM_INPUT" ]]; then
+    echo "Using local ROM file..."
+    ROM_PATH="$ROM_INPUT"
+elif [[ -d "$ROM_INPUT" ]]; then
+    echo "Using already unpacked ROM directory..."
+    cp -r "$ROM_INPUT"/* "UnpackedROMs/"
+else
+    echo "Error: Input must be a valid URL or local file path"
+    exit 1
+fi
 
-wget -P "DownloadedROMs/" "$ROM_LINK"
-
-Tools/Firmware_extractor/extractor.sh "DownloadedROMs/"* "UnpackedROMs/"
+# Only run extractor if we have a file (not directory)
+if [[ -f "$ROM_PATH" ]]; then
+    Tools/Firmware_extractor/extractor.sh "$ROM_PATH" "UnpackedROMs/"
+fi
 
 for partition in $partitions; do
     if [[ -f "UnpackedROMs/$partition.img" ]]; then
@@ -66,7 +80,7 @@ for partition in $partitions; do
         if [[ "$fs_type" == "ext2" || "$fs_type" == "ext4" ]]; then
             sudo mount -o loop,ro -t ext4 "UnpackedROMs/$partition.img" "UnpackedROMs/temp_mount"
         else
-            sudo mount "UnpackedROMs/$partition.img" "UnpackedROMs/temp_mount"
+            sudo mount -o loop,ro "UnpackedROMs/$partition.img" "UnpackedROMs/temp_mount"
         fi
         cp -r "UnpackedROMs/temp_mount/". "UnpackedROMs/$partition/"
         sudo umount -R "UnpackedROMs/temp_mount"
