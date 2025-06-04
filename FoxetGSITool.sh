@@ -77,9 +77,10 @@ case "$SDK_VERSION" in
   35)
     android_version="15"
     ;;
-   16)
+  36)
     android_version="16"
     ;;
+
   *)
     echo "Error: Unsupported SDK version $SDK_VERSION"
     exit 1
