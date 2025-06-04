@@ -1,12 +1,19 @@
+LabubuGSITool 🎭
+A powerful tool for converting Android firmware images into Generic System Images (GSI), making custom ROM flashing easier and more accessible.
+🚀 Features
 
-### For setting up requirements
-```
-sudo apt install unace unrar zip unzip p7zip-full p7zip-rar sharutils rar uudeview mpack arj cabextract rename liblzma-dev python3-pip brotli lz4 protobuf-compiler git gawk
-pip3 install backports.lzma protobuf pycrypto twrpdtgen extract-dtb pycryptodome
-```
+Automated GSI Creation: Convert stock firmware into flashable GSI images
+Multi-Device Support: Works with various Android devices and firmware formats
+Patch Integration: Includes patches for Android 11-16 compatibility
+Network Enhancement: Built-in netbpfload support for better boot performance on Android 15-16
+SystemUI Overlay: Prevents SystemUI crashes during GSI boot
 
-### Generating GSI from stock firmware URL
-Example: for making PixelOS of Pixel 7a firmware, you can use this command
-```
-sudo bash LinkToGSI.sh https://dl.google.com/dl/android/aosp/panther-bp1a.250505.005.b1-factory-f3671e06.zip Pixel
-```
+📋 Prerequisites
+System Requirements
+
+Linux-based operating system (Ubuntu/Debian recommended)
+Python 3.x
+Sufficient storage space (20+ GB recommended)
+Internet connection for downloading dependencies
+
+Dependencies Installation
