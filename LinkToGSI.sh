@@ -4,6 +4,13 @@ ROM_INPUT=$1
 ROM_TYPE=$2
 partitions="vendor system system_ext product mi_ext"
 
+if [[ -d "Tools/Firmware_extractor" ]]; then
+    git -C "Tools"/Firmware_extractor fetch origin
+    git -C "Tools"/Firmware_extractor reset --hard origin/master
+else
+    echo "Cloning Firmware_extractor..."
+    git clone -q --recurse-submodules https://github.com/AndroidDumps/Firmware_extractor.git "Tools"/Firmware_extractor
+fi
 
 usage() {
   echo "Usage: $0 [rom_input] [rom_type]"
@@ -21,7 +28,7 @@ usage() {
 supported_roms() {
     echo "Available ROMs:"
     echo ""
-    declare -a versions=(12 12.1 13 14 15)
+    declare -a versions=(11 12 12.1 13 14 15)
     for version in "${versions[@]}"; do
         rom_dir="ROMsPatches/$version"
         if [ -d "$rom_dir" ]; then
@@ -48,8 +55,7 @@ rm -rf UnpackedROMs
 
 mkdir -p DownloadedROMs
 mkdir -p UnpackedROMs
-sudo chmod -R 777 /home/egor/tool
-mkdir 
+
 # Check if input is a URL or local file
 if [[ "$ROM_INPUT" == http* ]]; then
     echo "Downloading ROM from URL..."
