@@ -2,7 +2,7 @@
 
 ROM_LINK=$1
 ROM_TYPE=$2
-partitions="vendor system system_ext product optics prism mi_ext my_bigball my_engineering my_manifest my_region my_carrier my_heytap my_product my_stock"
+partitions="vendor system system_ext product optics prism mi_ext my_bigball my_engineering my_manifest my_region my_carrier my_heytap my_product my_stock system_ext_a system_ext_b system_a system_b product_a product_b odm_a odm_b"
 
 if [[ -d "Tools/Firmware_extractor" ]]; then
     git -C "Tools"/Firmware_extractor fetch origin
