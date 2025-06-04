@@ -72,12 +72,6 @@ if [[ -f "$ROM_PATH" ]]; then
 fi
 
 for partition in $partitions; do
-    if [[ -f "UnpackedROMs/$partition_a.img" ]]; then
-        mv "UnpackedROMs/$partition_a.img" "UnpackedROMs/$partition.img"
-    fi
-done
-
-for partition in $partitions; do
     if [[ -f "UnpackedROMs/$partition.img" ]]; then
         echo "File found: UnpackedROMs/$partition.img"
         mkdir -p "UnpackedROMs/temp_mount"
