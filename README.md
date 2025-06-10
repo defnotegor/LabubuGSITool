@@ -18,5 +18,5 @@ pip3 install backports.lzma protobuf pycrypto twrpdtgen extract-dtb pycryptodome
 ### Generating GSI from stock firmware URL
 Example: for making PixelOS of Pixel 7a firmware, you can use this command
 ```
-sudo bash LinkToGSI.sh https://dl.google.com/dl/android/aosp/panther-bp1a.250505.005.b1-factory-f3671e06.zip Pixel
+sudo bash LinkToGSI.sh https://dl.google.com/dl/android/aosp/lynx-bp1a.250505.005.b1-factory-45a1393f.zip Pixel
 ```
