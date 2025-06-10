@@ -44,6 +44,7 @@ supported_roms() {
 
 if [ -z "$2" ]; then
   usage
+  supported_roms
   exit 0
 fi
 
