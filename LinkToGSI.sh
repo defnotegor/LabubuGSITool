@@ -54,9 +54,12 @@ rm -rf UnpackedROMs
 mkdir -p DownloadedROMs
 mkdir -p UnpackedROMs
 
-wget -P "DownloadedROMs/" "$ROM_LINK"
-
-Tools/Firmware_extractor/extractor.sh "DownloadedROMs/"* "UnpackedROMs/"
+if [ -f "$ROM_LINK" ]; then
+    Tools/Firmware_extractor/extractor.sh "$ROM_LINK" "UnpackedROMs/"
+else
+    wget -P "DownloadedROMs/" "$ROM_LINK"
+    Tools/Firmware_extractor/extractor.sh "DownloadedROMs/"* "UnpackedROMs/"
+fi
 
 for partition in $partitions; do
     if [[ -f "UnpackedROMs/$partition_a.img" ]]; then
